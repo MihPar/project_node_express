@@ -1,13 +1,11 @@
-const express = require('express')
+import express from 'express'
 const app = express()
 
 const port = 4000
 
-app.get('/', function(req: any, res: any) {
-    let message = 'Goodbuy my past life'
-    res.send(message)
+app.get('/', function(req, res) {
+    res.send('<h1>I am the samuray of back-end developer</h1>')
 })
-
-app.listen(port,  '127.0.0.1', function()  {
-    console.log(`Server was started at port http://localhost:${port}`)
+app.listen(port, '127.0.0.1', function() {
+    console.log(`Server was started at port http://loclahost:${port}`)
 })
