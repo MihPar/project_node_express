@@ -32,6 +32,11 @@ let db = {
     ]
 }
 
+app.delete('__test__/data', function(req, res) {
+    return db.courses = []
+    res.sendStatus(204)
+})
+
 app.get('/courses', (req, res) => {
     
     let foundCourses = db.courses
@@ -92,10 +97,6 @@ app.put('/courses/:id', function(req, res) {
     res.sendStatus(204)
 })
 
-app.get('/__test__/data', function(req: Request, res: Response) {
-    db.courses = []
-    res.sendStatus(204)
-})
 
 app.get('/', function(req: Request, res: Response) {
     res.send('<h1>I am the samuray of back-end developer</h1>')
