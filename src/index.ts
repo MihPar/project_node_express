@@ -1,7 +1,9 @@
 import express, {Request, Response} from 'express'
 import bodyParses from 'body-parser'
 import { title } from 'process'
-
+import { RequestWithBody, RequestWithQuery, RequestWithParams, RequestWithParamsAndBody } from './types'
+import { CourseCreateModel } from './models/courseCreateModel'
+import { CourseUpdataModel } from './models/CourseUpdataModule';
 export const app = express()
 
 const port = 4000
@@ -23,7 +25,12 @@ const addresses = [
     {id: 2, value: 'Staray 13'}
 ]
 
-let db = {
+type CourseType = {
+    id: number,
+    title: string,
+}
+
+let db: {courses: CourseType[]} = {
     courses: [
         {id: 1, title: 'front-end'},
         {id: 2, title: 'back-end'},
@@ -37,20 +44,21 @@ app.delete('__test__/data', function(req, res) {
     res.sendStatus(204)
 })
 
-app.get('/courses', (req, res) => {
+app.get('/courses', (req: RequestWithQuery<{title: string}>,
+                     res: Response<CourseType[]>) => {
     
     let foundCourses = db.courses
 
     if(req.query.title) {
         foundCourses = foundCourses.filter(function(c) {
-            return c.title.indexOf(req.query.title as string) > -1
+            return c.title.indexOf(req.query.title) > -1
         })
     }
 
     res.json(foundCourses)
 })
 
-app.get('/courses/:id', (req, res) => {
+app.get('/courses/:id', (req: RequestWithParams<{id: string}>, res) => {
     const foundCourses = db.courses.find(function(c) {
         return c.id === Number(req.params.id)
     })
@@ -61,7 +69,7 @@ app.get('/courses/:id', (req, res) => {
     res.json(foundCourses)
 })
 
-app.post('/courses', (req, res) => {
+app.post('/courses', (req: RequestWithBody<CourseCreateModel>, res: Response<CourseType>) => {
     if(!req.body.title) {
         res.sendStatus(404)
         return
@@ -74,14 +82,14 @@ app.post('/courses', (req, res) => {
     res.status(201).json(createCourses)
 })
 
-app.delete('/courses/:id', function(req, res) {
+app.delete('/courses/:id', function(req: RequestWithParams<{id: string}>, res) {
     db.courses = db.courses.filter(function(c) {
         return c.id !== +req.params.id
     })
     res.sendStatus(204)
 })
 
-app.put('/courses/:id', function(req, res) {
+app.put('/courses/:id', function(req: RequestWithParamsAndBody<{id: string}, CourseUpdataModel>, res) {
     if(!req.body.title) {
         res.sendStatus(404)
         return 

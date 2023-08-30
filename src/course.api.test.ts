@@ -18,12 +18,26 @@ describe('/course', () => {
             .get('/courses/1')
             .expect(404, [])
         })
+
+    let createdCourse: any = null
     it(`should'nt create course with correct input data`, 
         async () => {
-            await request(app)
+            const createResponse = await request(app)
             .post('/courses')
-            .send({title: ''})
-            .expect(400)
-        }
+            .send({title: 'it-incubator'})
+            .expect(201)
+
+            const createdCourse: any = createResponse.body
+            .expect(createResponse.body).toEqual({
+                id: expect.any(Number),
+                title: 'it-incubator'
+            })
+
+            await request(app)
+            .get('/courses')
+            .expect(200, [createdCourse])
+        } 
+        
+            
     )
 })
