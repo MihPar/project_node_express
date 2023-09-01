@@ -69,14 +69,14 @@ app.delete('/courses/:id', function(req, res) {
 
 app.put('/courses/:id', function(req, res) {
     if(!req.body.title) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUS.BAD_REQUEST_400)
         return 
     }
     const foundCourses = db.courses.find(function(c) {
         return c.id === Number(req.params.id)
     })
     if(!foundCourses) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUS.NOT_FOUND_404)
         return 
     }
     foundCourses.title = req.body.title
