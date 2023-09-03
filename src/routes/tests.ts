@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { HTTP_STATUS } from "./courses";
+import { HTTP_STATUS } from "../utils";
 import { DBType } from "../db/db";
 import express from 'express'
 

@@ -7,17 +7,9 @@ import { CreateCourseModel } from "../models/CreateCourseModel";
 import { UpdataCourseModel } from "../models/UpdataCourseModel";
 import { CoursesType, DBType, db } from "../db/db";
 import express from 'express'
+import { HTTP_STATUS } from "../utils";
 
 
-  export const HTTP_STATUS = {
-	OK_200: 200,
-	CREATED_201: 201,
-	NO_CONTANT_204: 204,
-  
-	BAD_REQUEST_400: 400,
-	NOT_FOUND_404: 404,
-  };
-  
 export const getCourseViewModel = (dbCourse: CoursesType): CourseViewModel => {
 	  return {
 		  id: dbCourse.id,
@@ -116,3 +108,17 @@ router.get(
   return router
 
 }
+
+export const getInterestingRouter = (db: DBType) => {
+  const router = express.Router();
+
+  router.get("/books", (req: RequestWithQuery<QueryCourseModel>, res) => {
+    res.json({ title: "it's books handler" });
+  });
+
+  router.get("/:id", (req: RequestWithParams<URIParamsCourseIdModel>, res) => {
+    res.json({ title: "data by id: " + req.params.id });
+  });
+
+  return router;
+};

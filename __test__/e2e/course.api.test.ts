@@ -1,5 +1,5 @@
 import { app } from '../../src/app';
-import { HTTP_STATUS } from '../../src/routes/courses';
+import { HTTP_STATUS } from '../../src/utils'
 import request from 'supertest'
 import { CreateCourseModel } from '../../src/models/CreateCourseModel'
 import { UpdataCourseModel } from '../../src/models/UpdataCourseModel'
