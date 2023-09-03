@@ -97,16 +97,16 @@ describe('/course', () => {
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await request(app)
-		.delete('/courses/' + createdCourse1.id)
-		.expect(HTTP_STATUS.NO_CONTANT_204)
+		.get('/courses/' + createdCourse1.id)
+		.expect(HTTP_STATUS.NOT_FOUND_404)
 
 		await request(app)
 		.delete('/courses/' + createdCourse2.id)
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await request(app)
-		.delete('/courses/' + createdCourse2.id)
-		.expect(HTTP_STATUS.NO_CONTANT_204)
+		.get('/courses/' + createdCourse2.id)
+		.expect(HTTP_STATUS.NOT_FOUND_404)
 
 		await request(app)
 		.get('/courses')
