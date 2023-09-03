@@ -1,6 +1,9 @@
+import { app } from '../../src/app';
+import { HTTP_STATUS } from '../../src/routes/courses';
 import request from 'supertest'
-import {app} from '../../src/index'
-import { HTTP_STATUS } from '../../src/index'
+import { CreateCourseModel } from '../../src/models/CreateCourseModel'
+import { UpdataCourseModel } from '../../src/models/UpdataCourseModel'
+// import { server } from '../../src/index'
 
 describe('/course', () => {
 
@@ -17,7 +20,9 @@ describe('/course', () => {
 	})
 
 	it(`should'nt create with incorrect input data`, async() => {
-		await request(app).post('/courses').send({title: ''})
+		const data: CreateCourseModel = {title: ''}
+		
+		await request(app).post('/courses').send(data)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 
 		await request(app).get('/courses').expect(200, [])
@@ -25,9 +30,10 @@ describe('/course', () => {
 
 	let createdCourse1: any =  null
 	it(`should create with correct input data`, async() => {
+		const data: CreateCourseModel = {title: 'new course'}
 		const createResponse = await request(app)
 		.post('/courses')
-		.send({title: 'new course'})
+		.send(data)
 		.expect(HTTP_STATUS.CREATED_201)
 
 		createdCourse1 = createResponse.body
@@ -42,9 +48,10 @@ describe('/course', () => {
 
 	let createdCourse2: any = null 
 	it(`create one more course`, async() => {
+		const data: CreateCourseModel = {title: 'new course2'}
 		const createResponse = await request(app)
 		.post('/courses')
-		.send({title: 'new course2'})
+		.send(data)
 		.expect(HTTP_STATUS.CREATED_201)
 
 		createdCourse2 = createResponse.body
@@ -52,7 +59,7 @@ describe('/course', () => {
 		expect(createdCourse2)
 		.toEqual({
 			id: expect.any(Number),
-			title: 'new course2'
+			title: data.title
 		})
 
 		await request(app)
@@ -61,9 +68,10 @@ describe('/course', () => {
 	})
 
 	it(`should'nt updata course with incorrect input data`, async() => {
+		const data: UpdataCourseModel = {title: ''}
 		await request(app)
 		.put('/courses/' + createdCourse1.id)
-		.send({title: ''})
+		.send(data)
 		.expect(HTTP_STATUS.BAD_REQUEST_400)
 
 		await request(app).get('/courses/' + createdCourse1.id)
@@ -71,23 +79,25 @@ describe('/course', () => {
 	})
 
 	it(`should'nt updata course that not exists`, async() => {
+		const data: UpdataCourseModel = {title: 'good title'}
 		await request(app)
 		.put('/courses/' + -100)
-		.send({title: 'good title'})
+		.send(data)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 	})
 
 	it(`should update course with correct input data`, async() => {
+		const data: UpdataCourseModel = {title: 'good new title'}
 		await request(app)
 		.put('/courses/' + createdCourse1.id)
-		.send({title: 'good new title'})
+		.send(data)
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await request(app)
 		.get('/courses/' + createdCourse1.id)
 		.expect(HTTP_STATUS.OK_200, {
 			...createdCourse1,
-			title: 'good new title' 
+			title: data.title 
 		})
 	})
 
@@ -111,5 +121,10 @@ describe('/course', () => {
 		await request(app)
 		.get('/courses')
 		.expect(HTTP_STATUS.OK_200, [])
+	})
+
+	afterAll(function(done) {
+		// server.close()
+		done()
 	})
 })
