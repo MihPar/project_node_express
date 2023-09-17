@@ -1,8 +1,8 @@
 import { app } from '../../src/app';
 import { HTTP_STATUS } from '../../src/utils'
 import request from 'supertest'
-import { CreateCourseModel } from '../../src/models/CreateCourseModel'
-import { UpdataCourseModel } from '../../src/models/UpdataCourseModel'
+import { CreateCourseModel } from '../../src/features/courses/models/CreateCourseModel';
+import { UpdateCourseModel } from './../../src/features/courses/models/UpdataCourseModel';
 
 describe('/course', () => {
 
@@ -67,7 +67,7 @@ describe('/course', () => {
 	})
 
 	it(`should'nt updata course with incorrect input data`, async() => {
-		const data: UpdataCourseModel = {title: ''}
+		const data: UpdateCourseModel = {title: ''}
 		await request(app)
 		.put('/courses/' + createdCourse1.id)
 		.send(data)
@@ -78,7 +78,7 @@ describe('/course', () => {
 	})
 
 	it(`should'nt updata course that not exists`, async() => {
-		const data: UpdataCourseModel = {title: 'good title'}
+		const data: UpdateCourseModel = {title: 'good title'}
 		await request(app)
 		.put('/courses/' + -100)
 		.send(data)
@@ -86,7 +86,7 @@ describe('/course', () => {
 	})
 
 	it(`should update course with correct input data`, async() => {
-		const data: UpdataCourseModel = {title: 'good new title'}
+		const data: UpdateCourseModel = {title: 'good new title'}
 		await request(app)
 		.put('/courses/' + createdCourse1.id)
 		.send(data)

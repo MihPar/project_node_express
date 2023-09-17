@@ -4,6 +4,12 @@ export type CoursesType = {
 	studentsCount: number;
   };
 
+  export type UserType = {
+	id: number;
+	title: string;
+	studentsCount: number;
+  };
+
 export type userType = {
 	id: number;
 	userName: string;

@@ -1,13 +1,13 @@
 import { Response, Express } from "express";
-import { CourseViewModel } from "../models/CourseViewModel"; 
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from "../types";
-import { QueryCourseModel } from "../models/QueryCoursesModel";
-import { URIParamsCourseIdModel } from "../models/URIParamsCourseIdModel";
-import { CreateCourseModel } from "../models/CreateCourseModel";
-import { UpdataCourseModel } from "../models/UpdataCourseModel";
-import { CoursesType, DBType, db } from "../db/db";
+import { CourseViewModel } from "./models/CourseViewModel"; 
+import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from "../../types";
+import { QueryCourseModel } from "./models/QueryCoursesModel";
+import { URIParamsCourseIdModel } from "./models/URIParamsCourseIdModel";
+import { CreateCourseModel } from "./models/CreateCourseModel";
+import { UpdateCourseModel } from "./models/UpdataCourseModel";
+import { CoursesType, DBType, db } from "../../db/db";
 import express from 'express'
-import { HTTP_STATUS } from "../utils";
+import { HTTP_STATUS } from "../../utils";
 
 
 export const getCourseViewModel = (dbCourse: CoursesType): CourseViewModel => {
@@ -86,7 +86,7 @@ router.get(
   router.put(
 	"/:id",
 	function (
-	  req: RequestWithParamsAndBody<URIParamsCourseIdModel, UpdataCourseModel>,
+	  req: RequestWithParamsAndBody<URIParamsCourseIdModel, UpdateCourseModel>,
 	  res: Response
 	) {
 	  if (!req.body.title) {

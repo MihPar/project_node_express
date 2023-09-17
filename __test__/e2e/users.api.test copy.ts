@@ -1,128 +1,132 @@
+import { UpdateUserModel } from './../../src/features/users/models/UpdataUserModel';
 import { app } from '../../src/app';
 import { HTTP_STATUS } from '../../src/utils'
 import request from 'supertest'
-import { CreateCourseModel } from '../../src/models/CreateCourseModel'
-import { UpdataCourseModel } from '../../src/models/UpdataCourseModel'
+import { RouterPath } from '../../src/app';
+import { CreateUserModel } from '../../src/features/users/models/CreateUserModel';
 
 const getRequest = () => {
 	return request(app)
 }
 
-describe('/users', () => {
+describe('tests for /users', () => {
 
 	beforeAll(async() => {
 		await getRequest().delete('/__test__/data')
 	})
 
 	it('should return 200 and ampy array', async() => {
-		await getRequest().get('/courses').expect(HTTP_STATUS.OK_200, []) 
+		await getRequest().get(RouterPath.users).expect(HTTP_STATUS.OK_200, []) 
 	})
 
-	it('shold return 404 for not existing course', async() => {
-		await getRequest().get('/courses/1').expect(HTTP_STATUS.NOT_FOUND_404) 
+	it('shold return 404 for not existing entity', async() => {
+		await getRequest().get(`${RouterPath.users}/1`).expect(HTTP_STATUS.NOT_FOUND_404) 
 	})
 
-	it(`should'nt create with incorrect input data`, async() => {
-		const data: CreateCourseModel = {title: ''}
+	it(`shouldn't create course with incorrect input data`, async() => {
+		const data: CreateUserModel = {userName: ''}
 		
-		await getRequest().post('/courses').send(data)
+		await getRequest().post(RouterPath.users).send(data)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 
-		await getRequest().get('/courses').expect(200, [])
+		await getRequest().get(RouterPath.users).expect(200, [])
 	})
 
-	let createdCourse1: any =  null
-	it(`should create with correct input data`, async() => {
-		const data: CreateCourseModel = {title: 'new course'}
+	let createdEntity1: any =  null
+	it(`should create entity with correct input data`, async() => {
+		const data: CreateUserModel = {userName : 'Mickhael'}
 		const createResponse = await getRequest()
-		.post('/courses')
+		.post(RouterPath.users)
 		.send(data)
 		.expect(HTTP_STATUS.CREATED_201)
 
-		createdCourse1 = createResponse.body
+		createdEntity1 = createResponse.body
 
-		expect(createdCourse1).toEqual({
+		expect(createdEntity1).toEqual({
 			id: expect.any(Number),
-			title: 'new course'
+			userName: data.userName
 		})
 
-		await getRequest().get('/courses').expect(HTTP_STATUS.OK_200, [createdCourse1])
+		await getRequest().get(RouterPath.users).expect(HTTP_STATUS.OK_200, [createdEntity1])
 	})
 
-	let createdCourse2: any = null 
-	it(`create one more course`, async() => {
-		const data: CreateCourseModel = {title: 'new course2'}
+	let createdEntity2: any = null 
+	it(`create one more entity`, async() => {
+		const data: CreateUserModel = {userName: 'Tatiana'}
 		const createResponse = await getRequest()
-		.post('/courses')
+		.post(RouterPath.users)
 		.send(data)
 		.expect(HTTP_STATUS.CREATED_201)
 
-		createdCourse2 = createResponse.body
+		createdEntity2 = createResponse.body
 
-		expect(createdCourse2)
+		expect(createdEntity2)
 		.toEqual({
 			id: expect.any(Number),
-			title: data.title
+			userName: data.userName
 		})
 
 		await getRequest()
-		.get('/courses')
-		.expect(HTTP_STATUS.OK_200, [createdCourse1, createdCourse2])
+		.get(RouterPath.users)
+		.expect(HTTP_STATUS.OK_200, [createdEntity1, createdEntity2])
 	})
 
-	it(`should'nt updata course with incorrect input data`, async() => {
-		const data: UpdataCourseModel = {title: ''}
+	it(`should'nt updata entity with incorrect input data`, async() => {
+		const data: UpdateUserModel = {userName: ''}
 		await getRequest()
-		.put('/courses/' + createdCourse1.id)
+		.put(`${RouterPath.users}/${createdEntity1.id}`)
 		.send(data)
 		.expect(HTTP_STATUS.BAD_REQUEST_400)
 
-		await getRequest().get('/courses/' + createdCourse1.id)
-		.expect(HTTP_STATUS.OK_200, createdCourse1)
+		await getRequest().get(`${RouterPath.users}/${createdEntity1.id}`)
+		.expect(HTTP_STATUS.OK_200, createdEntity1)
 	})
 
-	it(`should'nt updata course that not exists`, async() => {
-		const data: UpdataCourseModel = {title: 'good title'}
+	it(`should'nt updata entity that not exists`, async() => {
+		const data: UpdateUserModel = {userName: 'DIMICH'}
 		await getRequest()
-		.put('/courses/' + -100)
+		.put(`${RouterPath.users}/${-100}`)
 		.send(data)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 	})
 
-	it(`should update course with correct input data`, async() => {
-		const data: UpdataCourseModel = {title: 'good new title'}
+	it(`should update entity with correct input data`, async() => {
+		const data: UpdateUserModel = {userName: 'ILIA'}
 		await getRequest()
-		.put('/courses/' + createdCourse1.id)
+		.put(`${RouterPath.users}/${createdEntity1.id}`)
 		.send(data)
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await getRequest()
-		.get('/courses/' + createdCourse1.id)
+		.get(`${RouterPath.users}/${createdEntity1.id}`)
 		.expect(HTTP_STATUS.OK_200, {
-			...createdCourse1,
-			title: data.title 
+			...createdEntity1,
+			userName: data.userName 
 		})
+		await request(app)
+			.get(`${RouterPath.users}/${createdEntity2.id}`)
+			.expect(HTTP_STATUS.OK_200, createdEntity2)
 	})
 
 	it(`should delete bouth courses`, async() => {
 		await getRequest()
-		.delete('/courses/' + createdCourse1.id)
+		.delete(`${RouterPath.users}/${createdEntity1.id}`)
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await getRequest()
-		.get('/courses/' + createdCourse1.id)
+		.get(`${RouterPath.users}/${createdEntity1.id}`)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 
 		await getRequest()
-		.delete('/courses/' + createdCourse2.id)
+		.delete(`${RouterPath.users}/${createdEntity2.id}`)
 		.expect(HTTP_STATUS.NO_CONTANT_204)
 
 		await getRequest()
-		.get('/courses/' + createdCourse2.id)
+		.get(`${RouterPath.users}/${createdEntity2.id}`)
 		.expect(HTTP_STATUS.NOT_FOUND_404)
 
 		await getRequest()
-		.get('/courses')
+		.get(RouterPath.users)
 		.expect(HTTP_STATUS.OK_200, [])
 	})
 
