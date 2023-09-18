@@ -1,4 +1,4 @@
-import { Response, Express } from "express";
+import { Response } from "express";
 import { CourseViewModel } from "./models/CourseViewModel"; 
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from "../../types";
 import { QueryCourseModel } from "./models/QueryCoursesModel";

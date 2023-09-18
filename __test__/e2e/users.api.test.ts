@@ -1,9 +1,9 @@
-import { UpdateUserModel } from './../../src/features/users/models/UpdataUserModel';
 import { app } from '../../src/app';
 import { HTTP_STATUS } from '../../src/utils'
 import request from 'supertest'
 import { RouterPath } from '../../src/app';
 import { CreateUserModel } from '../../src/features/users/models/CreateUserModel';
+import { UpdateUserModel } from '../../src/features/users/models/UpdataUserModel';
 
 const getRequest = () => {
 	return request(app)
@@ -12,7 +12,7 @@ const getRequest = () => {
 describe('tests for /users', () => {
 
 	beforeAll(async() => {
-		await getRequest().delete('/__test__/data')
+		await getRequest().delete(`${RouterPath.__test__}/data`)
 	})
 
 	it('should return 200 and ampy array', async() => {
@@ -23,7 +23,7 @@ describe('tests for /users', () => {
 		await getRequest().get(`${RouterPath.users}/1`).expect(HTTP_STATUS.NOT_FOUND_404) 
 	})
 
-	it(`shouldn't create course with incorrect input data`, async() => {
+	it(`shouldn't create entity with incorrect input data`, async() => {
 		const data: CreateUserModel = {userName: ''}
 		
 		await getRequest().post(RouterPath.users).send(data)
@@ -71,7 +71,7 @@ describe('tests for /users', () => {
 		.expect(HTTP_STATUS.OK_200, [createdEntity1, createdEntity2])
 	})
 
-	it(`should'nt updata entity with incorrect input data`, async() => {
+	it(`shouldn't updata entity with incorrect input data`, async() => {
 		const data: UpdateUserModel = {userName: ''}
 		await getRequest()
 		.put(`${RouterPath.users}/${createdEntity1.id}`)
@@ -82,7 +82,7 @@ describe('tests for /users', () => {
 		.expect(HTTP_STATUS.OK_200, createdEntity1)
 	})
 
-	it(`should'nt updata entity that not exists`, async() => {
+	it(`shouldn't updata entity that not exists`, async() => {
 		const data: UpdateUserModel = {userName: 'DIMICH'}
 		await getRequest()
 		.put(`${RouterPath.users}/${-100}`)

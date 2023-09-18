@@ -4,7 +4,7 @@ import {UserType, DBType} from "../../db/db";
 import express from 'express'
 import { HTTP_STATUS } from "../../utils";
 import { UserViewModel } from "./models/UserViewModel";
-import { QueryUserModel } from "./models/QueryUserModel";
+import { QueryUsersModel } from "./models/QueryUsersModel";
 import { URIParamsUserIdModel } from "./models/URIParamsUserIdModel";
 import { CreateUserModel } from "./models/CreateUserModel";
 import { UpdateUserModel } from "./models/UpdataUserModel";
@@ -13,7 +13,7 @@ import { UpdateUserModel } from "./models/UpdataUserModel";
 export const mapEntityToViewModel = (dbEntity: UserType): UserViewModel => {
 	  return {
 		  id: dbEntity.id,
-		  userName: dbEntity.title,
+		  userName: dbEntity.userName,
 		};
 }
 
@@ -24,7 +24,7 @@ export const getUsersRouter = (db: DBType) => {
 router.get(
 	"/",
 	(
-	  req: RequestWithQuery<QueryUserModel>,
+	  req: RequestWithQuery<QueryUsersModel>,
 	  res: Response<UserViewModel[]>
 	) => {
 	  let foundEntities = db.users;
@@ -76,9 +76,9 @@ router.get(
 	  }
 	  const createdEntity: UserType = {
 		id: Number(new Date()),
-		title: req.body.userName,
-		studentsCount: 0,
+		userName: req.body.userName,
 	  };
+	  
 	  db.users.push(createdEntity);
 	  res.status(201).json(mapEntityToViewModel(createdEntity));
 	}

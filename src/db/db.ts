@@ -4,13 +4,7 @@ export type CoursesType = {
 	studentsCount: number;
   };
 
-  export type UserType = {
-	id: number;
-	title: string;
-	studentsCount: number;
-  };
-
-export type userType = {
+export type UserType = {
 	id: number;
 	userName: string;
 }
@@ -35,8 +29,8 @@ export type StudentCourseBinding = {
 	studentCourseBinding: [
 		{studentId: 1, coureseId: 1, date: new Date(2022, 10, 1)},
 		{studentId: 2, coureseId: 2, date: new Date(2022, 10,1)},
-		{studentId: 3, coureseId: 3, date: new Date(2022, 10, 1)},
+		{studentId: 3, coureseId: 2, date: new Date(2022, 10, 1)},
 	]
   };
 
-  export type DBType = {courses: CoursesType[], users: userType[], studentCourseBinding: StudentCourseBinding[]}
+  export type DBType = {courses: CoursesType[], users: UserType[], studentCourseBinding: StudentCourseBinding[]}
