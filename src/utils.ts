@@ -6,3 +6,6 @@ export const HTTP_STATUS = {
 	BAD_REQUEST_400: 400,
 	NOT_FOUND_404: 404,
   };
+
+ type HttpStatusKeys = keyof typeof HTTP_STATUS
+ export type HttpStatusType = (typeof HTTP_STATUS) [HttpStatusKeys]

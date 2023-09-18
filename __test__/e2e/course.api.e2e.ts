@@ -1,13 +1,14 @@
 import { app } from '../../src/app';
 import { HTTP_STATUS } from '../../src/utils'
 import { CreateCourseModel } from '../../src/features/courses/models/CreateCourseModel';
-import { UpdateCourseModel } from './../../src/features/courses/models/UpdataCourseModel';
+import { UpdateCourseModel } from '../../src/features/courses/models/UpdataCourseModel';
 import request from 'supertest'
+import { coursesTestManager } from '../utils/courseTestManager';
+
 
 const getRequest = () => {
 	return request(app)
 }
-
 describe('/course', () => {
 
 	beforeAll(async() => {
@@ -24,27 +25,18 @@ describe('/course', () => {
 
 	it(`should'nt create with incorrect input data`, async() => {
 		const data: CreateCourseModel = {title: ''}
-		
-		await getRequest().post('/courses').send(data)
-		.expect(HTTP_STATUS.NOT_FOUND_404)
 
+		await coursesTestManager.createCourse(data, HTTP_STATUS.NOT_FOUND_404)
+		
 		await getRequest().get('/courses').expect(200, [])
 	})
 
 	let createdCourse1: any =  null
-	it(`should create with correct input data`, async() => {
+	it(`should create course with correct input data`, async() => {
 		const data: CreateCourseModel = {title: 'new course'}
-		const createResponse = await getRequest()
-		.post('/courses')
-		.send(data)
-		.expect(HTTP_STATUS.CREATED_201)
 
-		createdCourse1 = createResponse.body
-
-		expect(createdCourse1).toEqual({
-			id: expect.any(Number),
-			title: 'new course'
-		})
+		const result = await coursesTestManager.createCourse(data)
+		createdCourse1 = result.createdEntity
 
 		await getRequest().get('/courses').expect(HTTP_STATUS.OK_200, [createdCourse1])
 	})
@@ -52,25 +44,16 @@ describe('/course', () => {
 	let createdCourse2: any = null 
 	it(`create one more course`, async() => {
 		const data: CreateCourseModel = {title: 'new course2'}
-		const createResponse = await getRequest()
-		.post('/courses')
-		.send(data)
-		.expect(HTTP_STATUS.CREATED_201)
 
-		createdCourse2 = createResponse.body
-
-		expect(createdCourse2)
-		.toEqual({
-			id: expect.any(Number),
-			title: data.title
-		})
+		const result = await coursesTestManager.createCourse(data)
+		createdCourse2 = result.createdEntity
 
 		await getRequest()
 		.get('/courses')
 		.expect(HTTP_STATUS.OK_200, [createdCourse1, createdCourse2])
 	})
 
-	it(`should'nt updata course with incorrect input data`, async() => {
+	it(`shouldn't updata course with incorrect input data`, async() => {
 		const data: UpdateCourseModel = {title: ''}
 		await getRequest()
 		.put('/courses/' + createdCourse1.id)
@@ -81,7 +64,7 @@ describe('/course', () => {
 		.expect(HTTP_STATUS.OK_200, createdCourse1)
 	})
 
-	it(`should'nt updata course that not exists`, async() => {
+	it(`shouldn't updata course that not exists`, async() => {
 		const data: UpdateCourseModel = {title: 'good title'}
 		await getRequest()
 		.put('/courses/' + -100)

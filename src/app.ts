@@ -13,6 +13,7 @@ app.use(middleware);
 export const RouterPath = {
 	courses: '/coureses',
 	users: 'users',
+	users_courses_bindings: '/users_courses_bindings',
 	__test__: '/__test__',
 }
 
