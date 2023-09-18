@@ -1,16 +1,17 @@
-import { CreateCourseModel } from '../../src/features/courses/models/CreateCourseModel';
 import { HTTP_STATUS, HttpStatusType } from '../../src/utils';
 import { app, RouterPath } from '../../src/app';
 import request from 'supertest'
+import { CreateUseCourseBindingrModel } from '../../src/features/users_courses_bindings/models/CreateCourseUserBoindingModel';
+
 
 const getRequest = () => {
 	return request(app)
 }
 
-export const usersCoursesTestManager = {
-	async createBinding(data: CreateUserCourseBindingModel, expectedStatuesCode: HttpStatusType = HTTP_STATUS.CREATED_201) {
+export const usersCoursesBindingsTestManager = {
+	async createBinding(data: CreateUseCourseBindingrModel, expectedStatuesCode: HttpStatusType = HTTP_STATUS.CREATED_201) {
 		 const response = await getRequest()
-       .post(RouterPath.courses)
+       .post(RouterPath.usersCoursesBindings)
        .send(data)
        .expect(HTTP_STATUS.CREATED_201);
 
@@ -18,8 +19,10 @@ export const usersCoursesTestManager = {
      if (expectedStatuesCode === HTTP_STATUS.OK_200) {
        createdEntity = response.body;
        expect(createdEntity).toEqual({
-		id: expect.any(Number),
-		title: data.title
+		userId: data.userId,
+		courseId: data.courseId,
+		userName: expect.any(String),
+		courseTitle: expect.any(String),
 	})
      }
 

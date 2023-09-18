@@ -9,9 +9,9 @@ export type UserType = {
 	userName: string;
 }
 
-export type StudentCourseBinding = {
-	studentId: number;
-	coureseId: number;
+export type UserCourseBindingType = {
+	userId: number;
+	courseId: number;
 	date: Date;
 }
 
@@ -26,11 +26,11 @@ export type StudentCourseBinding = {
 		{id: 1, userName: 'Mickhal'},
 		{id: 2, userName: 'Tatiana'}
 	],
-	studentCourseBinding: [
-		{studentId: 1, coureseId: 1, date: new Date(2022, 10, 1)},
-		{studentId: 2, coureseId: 2, date: new Date(2022, 10,1)},
-		{studentId: 3, coureseId: 2, date: new Date(2022, 10, 1)},
+	userCourseBinding: [
+		{userId: 1, courseId: 1, date: new Date(2022, 10, 1)},
+		{userId: 2, courseId: 2, date: new Date(2022, 10,1)},
+		{userId: 3, courseId: 2, date: new Date(2022, 10, 1)},
 	]
   };
 
-  export type DBType = {courses: CoursesType[], users: UserType[], studentCourseBinding: StudentCourseBinding[]}
+  export type DBType = {courses: CoursesType[], users: UserType[], userCourseBinding: UserCourseBindingType[]}
